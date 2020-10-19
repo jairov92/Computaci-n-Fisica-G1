@@ -1,4 +1,6 @@
 
+import comunicacionserial.ArduinoExcepcion;
+import comunicacionserial.ComunicacionSerial_Arduino;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -7,6 +9,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jssc.SerialPortException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,15 +20,21 @@ import org.json.JSONObject;
  */
 /**
  *
- * @author juanp
+ * @author jairo
  */
 public class FrameInterfaz extends javax.swing.JFrame {
+ComunicacionSerial_Arduino conexion = new ComunicacionSerial_Arduino();
 
     /**
      * Creates new form FrameInterfaz
      */
     public FrameInterfaz() {
         initComponents();
+    try {
+        conexion.arduinoTX("COM8", 9600);
+    } catch (ArduinoExcepcion ex) {
+        Logger.getLogger(FrameInterfaz.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }
 
     /**
@@ -77,7 +86,7 @@ public class FrameInterfaz extends javax.swing.JFrame {
         jSlider1.setToolTipText("");
         jSlider1.setValue(7);
 
-        jLabel2.setText("DO");
+        jLabel2.setText("MN");
 
         jSlider2.setMaximum(20);
         jSlider2.setPaintLabels(true);
@@ -85,7 +94,7 @@ public class FrameInterfaz extends javax.swing.JFrame {
         jSlider2.setSnapToTicks(true);
         jSlider2.setValue(0);
 
-        jLabel3.setText("Particulas de ozono");
+        jLabel3.setText("Particulas de aire");
 
         jSlider3.setMaximum(1000);
         jSlider3.setMinimum(10);
@@ -94,7 +103,7 @@ public class FrameInterfaz extends javax.swing.JFrame {
         jSlider3.setSnapToTicks(true);
         jSlider3.setValue(10);
 
-        jLabel4.setText("¿Presenta particulas en el agua?");
+        jLabel4.setText("¿Presenta particulas de aire?");
 
         jSlider4.setMaximum(1);
         jSlider4.setPaintLabels(true);
@@ -168,7 +177,7 @@ public class FrameInterfaz extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
                         .addComponent(jSlider4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -233,16 +242,23 @@ public class FrameInterfaz extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         try {
+            try {
+                conexion.sendData("1");
+            } catch (ArduinoExcepcion ex) {
+                Logger.getLogger(FrameInterfaz.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SerialPortException ex) {
+                Logger.getLogger(FrameInterfaz.class.getName()).log(Level.SEVERE, null, ex);
+            }
             java.util.Date fecha = new Date();
             System.out.println(fecha);
             int ph = jSlider1.getValue();
             System.out.println("pH:" + ph);
             int oxigenoDis = jSlider2.getValue();
-            System.out.println("Oxigeno disuelto(DO):" + oxigenoDis);
+            System.out.println("Monoxido(MN):" + oxigenoDis);
             int concentracionOzono = jSlider3.getValue();
-            System.out.println("Particulas de ozono:" + concentracionOzono);
+            System.out.println("Particulas de aire:" + concentracionOzono);
             int particulasMetales = jSlider4.getValue();
-            System.out.println("Metales presentes:" + particulasMetales);
+            System.out.println("Humos presentes:" + particulasMetales);
 
             JSONObject jo = new JSONObject();
          
