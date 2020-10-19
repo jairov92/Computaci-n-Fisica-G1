@@ -31,12 +31,13 @@ ComunicacionSerial_Arduino conexion = new ComunicacionSerial_Arduino();
     public FrameInterfaz() {
         initComponents();
     try {
-        conexion.arduinoTX("COM8", 9600);
+        conexion.arduinoTX("COM5", 9600);
     } catch (ArduinoExcepcion ex) {
         Logger.getLogger(FrameInterfaz.class.getName()).log(Level.SEVERE, null, ex);
     }
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
